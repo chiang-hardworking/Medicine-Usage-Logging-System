@@ -1,0 +1,7 @@
+# 忽略 Excel 資料檔
+*.xlsx
+# 忽略設定檔（包含你的 COM Port 紀錄）
+config.json
+# 忽略 Python 快取
+__pycache__/
+*.py[cod]
