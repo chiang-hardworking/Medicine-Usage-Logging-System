@@ -1,4 +1,4 @@
-藥品使用紀錄系統 (Medicine Usage Logging System) v1.0
+藥品使用紀錄系統 (Medicine Usage Logging System) v3.0
 這是一個專為實驗室或藥劑室設計的數據管理系統，透過 RS232/USB 序列埠 連接 METTLER TOLEDO 天平。系統能自動擷取重量數據，並即時更新 Excel 庫存清單，具備低量預警與自動標記功能。
 
 🌟 核心功能
