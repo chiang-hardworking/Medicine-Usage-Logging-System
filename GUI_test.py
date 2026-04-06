@@ -232,7 +232,7 @@ class BalanceGUI(ctk.CTk):
         while self.is_monitoring:
             try:
                 if self.ser.in_waiting > 0:
-                    raw_line = self.ser.readline().decode('ascii', errors='ignore').strip()
+                    raw_line = self.ser.readline().decode('ascii', errors='replace').strip()
                     if raw_line: 
                         # 使用 self.after 切換回主執行緒處理資料，確保 UI 彈出視窗不會卡死
                         self.after(0, self.handle_weight_data, raw_line)
@@ -240,28 +240,36 @@ class BalanceGUI(ctk.CTk):
 
     def handle_weight_data(self, raw_line):
         parts = raw_line.split()
-        if len(parts) >= 4 and parts[0] in ['S', 'SD']:
-            weight = parts[2]
-            unit = parts[3]
-            
-            self.weight_display.configure(text=weight)
-            self.unit_label.configure(text=unit)
-            
-            cid = self.id_entry.get()
-            prod = self.prod_combo.get()
-            ctype = self.type_var.get()
-            bot = self.bot_entry.get()
+        if not (len(parts) >= 4 and parts[0] in ['S', 'SD']):
+            if raw_line:
+                self.update_log(f"⚠️ 格式不符過濾條件 (需開頭為 S/SD 且長度>=4)。目前拆解結果: {parts}")
+            return
+    
+        weight = parts[2]
+        unit = parts[3]
+        
+        self.weight_display.configure(text=weight)
+        self.unit_label.configure(text=unit)
+        
+        cid = self.id_entry.get()
+        prod = self.prod_combo.get()
+        ctype = self.type_var.get()
+        bot = self.bot_entry.get()
 
-            # 檢查 Excel 中是否有該 ID 的標準
-            std_val = self.get_standard_from_excel(cid)
-            
-            if std_val is None:
-                # 第一次出現，彈出輸入視窗
-                self.popup_standard_input(cid, prod, ctype, weight, unit, bot, default_std=weight)
-            else:
-                # 已存在，直接存檔
-                self.process_save(cid, prod, ctype, weight, unit, bot, std_val)
+        # 檢查 Excel 中是否有該 ID 的標準
+        std_val = self.get_standard_from_excel(cid)
+        
+        if std_val is None:
+            # 第一次出現，彈出輸入視窗
+            self.popup_standard_input(cid, prod, ctype, weight, unit, bot, default_std=weight)
+        else:
+            # 已存在，直接存檔
+            self.process_save(cid, prod, ctype, weight, unit, bot, std_val)
 
+    def update_log(self, message):
+        self.log_box.insert("end", message + "\n" + "-"*30 + "\n")
+        self.log_box.see("end")
+    
     def popup_standard_input(self, cid, prod, ctype, weight, unit, bot, default_std):
         """彈出視窗詢問標準"""
         dialog = ctk.CTkToplevel(self)

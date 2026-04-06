@@ -5,3 +5,13 @@ config.json
 # 忽略 Python 快取
 __pycache__/
 *.py[cod]
+# 忽略執行黨
+*.exe
+# 忽略日誌檔
+*.log
+# 忽略虛擬環境資料夾
+venv/
+# 忽略其他不必要的檔案
+*.tmp
+*.bak
+*.swp
