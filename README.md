@@ -1,55 +1,45 @@
-# Medicine Usage Logging System
+# Medicine Usage Logging System 使用說明
 
-實驗室秤重與庫存管理工具，透過 COM Port 讀取天平資料，自動寫入 Excel。
+本系統用於讀取電子秤資料，並自動整理藥品/耗材的庫存紀錄。
 
-## 主要功能
-- 自動監聽天平資料（S/SD 格式）
-- Excel 雙工作表管理（`詳細記錄`、`庫存餘量`）
-- 首次產品編號自動詢問安全標準
-- 低於標準自動標紅
-- 內建測試模式（預設隱藏，`Ctrl+Shift+T` 解鎖）
-- 內建「檢查更新」按鈕（比對 GitHub Releases 最新版本）
+## 功能摘要
+- 即時讀取電子秤資料（COM Port）
+- 自動寫入 Excel
+- 首次新產品會提示設定安全庫存標準
+- 庫存低於標準時自動標示提醒
+- 支援檢查新版本更新
 
-## 開發環境安裝
-```powershell
-pip install -r requirements.txt
-```
+## 系統需求
+- Windows 作業系統
+- 已連接可輸出資料的電子秤（COM Port）
 
-## 本機執行
-```powershell
-python GUI_test.py
-```
+## 開始使用
+1. 啟動 `MedicineUsageLoggingSystem.exe`
+2. 在左側選擇正確的 COM Port
+3. 輸入：
+   - 員工編號
+   - 產品編號
+   - 名稱
+   - 瓶數
+   - 類別（入庫/出庫）
+4. 按「開始監聽」
+5. 電子秤送出資料後，系統會自動記錄
 
-## 版本檔
-- `version.json` 內維護目前版本，例如：
-```json
-{
-  "version": "3.2.0"
-}
-```
+## 首次產品編號設定
+- 若產品編號第一次出現，系統會跳出視窗要求輸入「安全庫存標準」。
+- 輸入後，後續會自動沿用該標準。
 
-## 打包 EXE（推薦流程）
-在專案根目錄執行：
-```powershell
-.\build_exe.ps1
-```
+## Excel 資料檔
+- 檔名：`medicine_data.xlsx`
+- 工作表：
+  - `詳細記錄`
+  - `庫存餘量`
 
-若要在打包時直接覆蓋版本號：
-```powershell
-.\build_exe.ps1 -Version 3.2.1
-```
-
-打包結果：
-- 執行檔資料夾：`output/release/`
-- 發佈壓縮檔：`output/MedicineUsageLoggingSystem-v<version>.zip`
-
-## 發佈新版（GitHub Releases）
-1. 更新程式碼與 `version.json`
-2. 執行 `.\build_exe.ps1`
-3. 將 `output/MedicineUsageLoggingSystem-v<version>.zip` 上傳到 GitHub Release
-4. Release tag 建議使用 `v<version>`（例如 `v3.2.1`）
-
-## 使用者更新方式
+## 更新程式
 1. 開啟程式
 2. 按「檢查更新」
-3. 若有新版本，按提示前往 GitHub Release 下載
+3. 若有新版，依提示前往下載頁更新
+
+## 注意事項
+- 使用中請勿開啟 `medicine_data.xlsx`（避免寫入失敗）
+- 若找不到 COM Port，請確認線材與驅動程式是否正常
