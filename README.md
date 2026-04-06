@@ -1,75 +1,55 @@
-藥品使用紀錄系統 (Medicine Usage Logging System) v3.0
-這是一個專為實驗室或藥劑室設計的數據管理系統，透過 RS232/USB 序列埠 連接 METTLER TOLEDO 天平。系統能自動擷取重量數據，並即時更新 Excel 庫存清單，具備低量預警與自動標記功能。
+# Medicine Usage Logging System
 
-🌟 核心功能
-自動化數據擷取：即時監聽天平輸出的 S/SD 格式數據，消除人工錄入錯誤。
+實驗室秤重與庫存管理工具，透過 COM Port 讀取天平資料，自動寫入 Excel。
 
-雙工作表管理：
+## 主要功能
+- 自動監聽天平資料（S/SD 格式）
+- Excel 雙工作表管理（`詳細記錄`、`庫存餘量`）
+- 首次產品編號自動詢問安全標準
+- 低於標準自動標紅
+- 內建測試模式（預設隱藏，`Ctrl+Shift+T` 解鎖）
+- 內建「檢查更新」按鈕（比對 GitHub Releases 最新版本）
 
-詳細記錄：儲存每一筆秤重的完整歷史（日期、時間、ID、名稱、類型、重量、瓶數、餘量）。
-
-庫存餘量：自動彙整每個 ID 的當前總量，並根據「補充/消耗」邏輯動態計算。
-
-智慧標準邏輯：
-
-首見自動詢問：新 ID 第一次出現時，系統會彈出視窗請使用者設定安全標準。
-
-低量預警：當餘量低於設定標準，Excel 中的該列會自動塗上紅色背景。
-
-手動修改：提供「修改標準」按鈕，隨時調整安全庫存線。
-
-現代化 UI 介面：
-
-使用 CustomTkinter 打造深色主題介面。
-
-即時預覽表格：介面右下方直接顯示 Excel 中最近 10 筆的秤重紀錄。
-
-設備記憶功能：自動儲存上次使用的 COM Port，下次開啟不需重新設定。
-
-🛠️ 安裝步驟
-1. 確保已安裝 Python
-建議版本為 Python 3.8 或以上。
-
-2. 安裝必要套件
-在專案目錄下執行以下指令：
-
-Bash
+## 開發環境安裝
+```powershell
 pip install -r requirements.txt
-(註：requirements.txt 應包含 customtkinter, pyserial, openpyxl)
+```
 
-🚀 操作說明
-連接設備：將天平透過傳輸線連接至電腦，並確認天平的輸出格式設定為MT-SICS。
+## 本機執行
+```powershell
+python GUI_test.py
+```
 
-設定系統：
+## 版本檔
+- `version.json` 內維護目前版本，例如：
+```json
+{
+  "version": "3.2.0"
+}
+```
 
-在左側下拉選單選擇正確的 COM Port。
+## 打包 EXE（推薦流程）
+在專案根目錄執行：
+```powershell
+.\build_exe.ps1
+```
 
-輸入藥品 ID（預設為 0000）與 名稱。
+若要在打包時直接覆蓋版本號：
+```powershell
+.\build_exe.ps1 -Version 3.2.1
+```
 
-設定 瓶數 與 項目類別（補充或消耗）。
+打包結果：
+- 執行檔資料夾：`output/release/`
+- 發佈壓縮檔：`output/MedicineUsageLoggingSystem-v<version>.zip`
 
-開始監聽：點擊「開始監聽」按鈕。
+## 發佈新版（GitHub Releases）
+1. 更新程式碼與 `version.json`
+2. 執行 `.\build_exe.ps1`
+3. 將 `output/MedicineUsageLoggingSystem-v<version>.zip` 上傳到 GitHub Release
+4. Release tag 建議使用 `v<version>`（例如 `v3.2.1`）
 
-執行秤重：
-
-按下天平上的 Print 鍵或根據天平設定自動輸出。
-
-若為新 ID：系統會跳出視窗請您設定此藥品的「安全標準」。
-
-數據自動儲存：數據會同步寫入 medicine_data.xlsx 並更新右側預覽表格。
-
-📊 Excel 檔案結構 (medicine_data.xlsx)
-工作表 1：詳細記錄
-
-包含：日期 | 時間 | ID | 名稱 | 類別 | 重量 | 單位 | 瓶數 | 標準 | 餘量
-
-工作表 2：庫存餘量
-
-包含：ID | 名稱 | 單位 | 標準 | 餘量
-
-註：若「餘量 < 標準」，整列會顯示為淺紅色。
-
-⚠️ 注意事項
-執行程式時請務必關閉該 Excel 檔案，否則系統會因權限問題無法寫入數據。
-
-若未偵測到 COM Port，請檢查驅動程式是否安裝（如常見的 PL2303 或 CH340 驅動）。
+## 使用者更新方式
+1. 開啟程式
+2. 按「檢查更新」
+3. 若有新版本，按提示前往 GitHub Release 下載
