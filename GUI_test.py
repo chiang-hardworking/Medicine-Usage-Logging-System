@@ -119,7 +119,7 @@ class BalanceGUI(ctk.CTk):
 
         self.btn_start = ctk.CTkButton(
             self.sidebar,
-            text="開始監聽",
+            text="開始連線",
             command=self.toggle_monitoring,
             fg_color="green",
             hover_color="#006400",
@@ -603,17 +603,17 @@ class BalanceGUI(ctk.CTk):
             self.is_monitoring = True
             self.is_test_mode = False
             self.save_config()
-            self.btn_start.configure(text="停止監聽", fg_color="red")
-            self.update_log(f"系統已開始監聽 ({port})")
+            self.btn_start.configure(text="停止連線", fg_color="red")
+            self.update_log(f"系統已開始連線 ({port})")
             threading.Thread(target=self.listen_serial, daemon=True).start()
         except Exception as exc:
-            self.update_log(f"啟動監聽失敗: {exc}")
+            self.update_log(f"啟動連線失敗: {exc}")
 
     def start_test_mode(self):
         self.is_monitoring = True
         self.is_test_mode = True
         self.save_config()
-        self.btn_start.configure(text="停止監聽", fg_color="red")
+        self.btn_start.configure(text="停止連線", fg_color="red")
         self.show_test_panel()
         self.update_log("已進入測試模式，請在左側輸入測試重量並按下「送出測試數據」。")
 
@@ -624,8 +624,8 @@ class BalanceGUI(ctk.CTk):
             self.ser.close()
             self.ser = None
         self.hide_test_panel()
-        self.btn_start.configure(text="開始監聽", fg_color="green")
-        self.update_log("監聽已停止")
+        self.btn_start.configure(text="開始連線", fg_color="green")
+        self.update_log("連線已停止")
 
     def listen_serial(self):
         while self.is_monitoring:
